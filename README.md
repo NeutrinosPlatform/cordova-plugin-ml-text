@@ -1,6 +1,5 @@
 |[Introduction](#cordova-plugin-ml-text) | [Supported_Platforms](#supported-platforms) | [Installation_Steps](#installation-steps) | [Plugin_Usage](#plugin-usage) | [Working_Examples](#working-examples) | [More_about_us!](#more-about-us)|
 |:---:|:------:|:---:|:---:|:---:|:---:|
-|||||||
 
 
 # cordova-plugin-ml-text
