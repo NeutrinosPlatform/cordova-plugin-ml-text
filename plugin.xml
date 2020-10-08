@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="cordova-plugin-ml-text"
+        version="2.0.0">
+
+  <name>Mltext</name>
+
+  <engines>
+    <engine name="cordova-android" version=">=6.4.0" />
+    <engine name="cordova-ios" version=">=4.3.0" />
+  </engines>
+
+  <asset src="www/gettext.js" target="js/gettext.js"/>
+  
+  <js-module src="www/gettext.js" name="gettext">
+    <clobbers target="mltext" />
+  </js-module>
+
+  <platform name="android">
+
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="Mltext">
+        <param name="android-package" value="com.neutrinos.mltextplugin.Mltext"/>
+      </feature>
+    </config-file> 
+
+    <preference name="MLKIT_TEXT_RECOGNITION_VERSION" default="16.1.0"/>
+
+    <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+            <meta-data
+		      android:name="com.google.mlkit.vision.DEPENDENCIES"
+		      android:value="ocr" />
+    </config-file>
+   
+    <source-file src="src/android/Mltext.java" target-dir="src/com/neutrinos/mltextplugin/" />
+    <framework src="com.google.android.gms:play-services-mlkit-text-recognition:$MLKIT_TEXT_RECOGNITION_VERSION" />
+  
+  </platform>
+
+
+  <platform name="ios">
+  <config-file target="config.xml" parent="/*">
+    <feature name="Mltext">
+      <param name="ios-package" value="Mltext" />
+    </feature>
+  </config-file>
+  
+  
+  <preference name="CAMERA_USAGE_DESCRIPTION" default="This app needs camera access"/>
+  <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+      <string>$CAMERA_USAGE_DESCRIPTION</string>
+  </config-file>
+  
+  <preference name="PHOTOLIBRARY_USAGE_DESCRIPTION" default="This app needs read/write-access photo library access"/>
+  <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
+      <string>$PHOTOLIBRARY_USAGE_DESCRIPTION</string>
+  </config-file>
+
+<header-file src="src/ios/Mltext.h" target-dir="MltextPlugin"/>
+<source-file src="src/ios/Mltext.m" target-dir="MltextPlugin"/>
+
+    <podspec>
+      <config>
+        <source url="https://github.com/CocoaPods/Specs.git"/>
+      </config>
+      <pods use-frameworks="true">
+        <pod name="MLKitTextRecognition" />
+      </pods>
+    </podspec>
+
+</platform>
+
+</plugin>

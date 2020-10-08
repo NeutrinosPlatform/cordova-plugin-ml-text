@@ -1,10 +1,11 @@
 |[Introduction](#cordova-plugin-ml-text) | [Supported_Platforms](#supported-platforms) | [Installation_Steps](#installation-steps) | [Plugin_Usage](#plugin-usage) | [Working_Examples](#working-examples) | [More_about_us!](#more-about-us)|
 |:---:|:------:|:---:|:---:|:---:|:---:|
+|||||||
 
 
 # cordova-plugin-ml-text
 
-> This plugin was made possible because of Google's [ML Kit](https://firebase.google.com/docs/ml-kit/) SDK and is an extension of the [firebase plugin](https://github.com/arnesson/cordova-plugin-firebase), which has to be added to the project as well, as it is a dependency of this plugin. The supported languages are listed [here](https://developers.google.com/vision/android/text-overview). This plugin is absolutely free and will work offline once install is complete. All required files required for Text Recognition are downloaded during install if necessary space is available.
+> This plugin was made possible because of Google's [ML Kit](https://firebase.google.com/docs/ml-kit/) SDK, as it is a dependency of this plugin. The supported languages are listed [here](https://developers.google.com/vision/android/text-overview). This plugin is absolutely free and will work offline once install is complete. All required files required for Text Recognition are downloaded during install if necessary space is available.
 
 This plugin defines a global `mltext` object, which provides an method that accepts image uri or base64 inputs. If some text was detected in the image, this text will be returned in an object. The imageuri or base64 can be send to the plugin using any another plugin like [cordova-plugin-camera](https://github.com/apache/cordova-plugin-camera) or [cordova-plugin-document-scanner](https://github.com/NeutrinosPlatform/cordova-plugin-document-scanner). Although the object is attached to the global scoped `window`, it is not available until after the `deviceready` event.
 
@@ -22,31 +23,26 @@ console.log(mltext);
 
 # Installation Steps
 
-This requires cordova 7.1.0+ , cordova android 6.4.0+ and cordova ios 4.3.0+ <br/>
+This requires cordova 7.1.0+ , cordova android 6.4.0+ and cordova ios 4.3.0+
 
-- `cordova plugin add https://bitbucket.org/bhivedevs/cordova-plugin-ml-text.git`
+`cordova plugin add https://bitbucket.org/bhivedevs/cordova-plugin-ml-text.git`
 
-> Note :- This might take a while
+> Note : This might take a while!
 
-Also add the following plugins :- 
-- `cordova plugin add cordova-plugin-firebase`
-[AND]
+**Optional installation variable for Android**
+*MLKIT_TEXT_RECOGNITION_VERSION*
+Version of `com.google.android.gms:play-services-mlkit-text-recognition`. This defaults to `16.1.0` but by using this variable you can specify a different version if you like:
+
+`cordova plugin add https://bitbucket.org/bhivedevs/cordova-plugin-ml-text.git --variable MLKIT_TEXT_RECOGNITION_VERSION=16.1.0`
+
+Also add the following plugin :- 
+
 - `cordova plugin add cordova-plugin-camera`
 
 
 **Firebase Setup :-**
-Download your Firebase configuration files, GoogleService-Info.plist for iOS and google-services.json for android, and place them in the root folder of your cordova project.  Check out this [firebase article](https://support.google.com/firebase/answer/7015592) for details on how to download the files.
+This version of the plugin only uses the on-device functionality and no longer requires Firebase.
 
-```
-- My Project/
-    platforms/
-    plugins/
-    www/
-    config.xml
-    google-services.json       <--
-    GoogleService-Info.plist   <--
-    ...
-```
 # Plugin Usage
 
 `mltext.getText(onSuccess, onFail, options);`
@@ -168,8 +164,6 @@ The basic structure of the object is as follows :-
 
  - **blocks**
    - **blocktext** - **Array** that contains each text block
-   - **blocklanguages** - **Array** of languages (Currently returns unusable values)
-   - **blockconfidence** - **Array** of confidence values (Currently return nil for on-Device text recognition) 
    - **blockpoints** - **Array** of objects of four points each that represent a block drawn around the text
      - x1 - Key (Example to get x1 of the first text block :- recognizedText.blocks.blockpoints[0].x1)
      - y1 - Key
@@ -186,8 +180,6 @@ The basic structure of the object is as follows :-
      - width - Key
  - **lines**
    - **linetext** - **Array** that contains each text block
-   - **linelanguages** - **Array** of languages (Currently returns unusable values)
-   - **lineconfidence** - **Array** of confidence values (Currently return nil for on-Device text recognition) 
    - **linepoints** - **Array** of objects of four points each that represent a block drawn around the text
         - x1 - Key
         - y1 - Key
@@ -204,8 +196,6 @@ The basic structure of the object is as follows :-
      - width - Key
  - **words**
    - **wordtext** - **Array** that contains each text block
-   - **wordlanguages** - **Array** of languages (Currently returns unusable values)
-   - **wordconfidence** - **Array** of confidence values (Currently return nil for on-Device text recognition) 
    - **wordpoints** - **Array** of objects of four points each that represent a block drawn around the text
         - x1 - Key
         - y1 - Key
@@ -224,18 +214,6 @@ The basic structure of the object is as follows :-
 ```json
 {
   "blocks": {
-    "blocklanguages": [
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4009800>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c400a100>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4009b00>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4009fb0>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4008d60>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4009fc0>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c400a170>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4008fa0>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4008c40>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4007790>\"]"
-    ],
     "blockpoints": [
       {
         "x3": "2338.143066",
@@ -349,18 +327,6 @@ The basic structure of the object is as follows :-
       "D",
       "Z",
       "X"
-    ],
-    "blockconfidence": [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
     ],
     "blockframe": [
       {
@@ -493,32 +459,6 @@ The basic structure of the object is as follows :-
         "height": "218.000000",
         "width": "208.000000"
       }
-    ],
-    "linelanguages": [
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c40084f0>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4009e70>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c400a0a0>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c40076e0>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c40067e0>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c400a150>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4008fb0>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c400a140>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c400a000>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c400a210>\"]",
-      "[    \"<FIRVisionTextRecognizedLanguage: 0x1c4007c80>\"]"
-    ],
-    "lineconfidence": [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
     ],
     "linetext": [
       "#",
@@ -659,19 +599,6 @@ The basic structure of the object is as follows :-
       "D",
       "Z",
       "X"
-    ],
-    "wordlanguages": [
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]"
     ],
     "wordpoints": [
       {
@@ -852,19 +779,6 @@ The basic structure of the object is as follows :-
         "height": "218.000000",
         "width": "208.000000"
       }
-    ],
-    "wordconfidence": [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
     ]
   }
 }
@@ -879,20 +793,6 @@ The basic structure of the object is as follows :-
       "PgUp",
       "PgDn",
       "Del"
-    ],
-    "blockconfidence": [
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-    "blocklanguages": [
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]"
     ],
     "blockpoints": [
       {
@@ -987,20 +887,6 @@ The basic structure of the object is as follows :-
       "PgDn",
       "Del"
     ],
-    "lineconfidence": [
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-    "linelanguages": [
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]"
-    ],
     "linepoints": [
       {
         "x1": 270,
@@ -1093,20 +979,6 @@ The basic structure of the object is as follows :-
       "PgUp",
       "PgDn",
       "Del"
-    ],
-    "wordconfidence": [
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-    "wordlanguages": [
-      "[]",
-      "[]",
-      "[]",
-      "[]",
-      "[]"
     ],
     "wordpoints": [
       {
