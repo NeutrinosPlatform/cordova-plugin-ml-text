@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/bhivedevs/cordova-plugin-ml-text"
+    "url": "https://github.com/NeutrinosPlatform/cordova-plugin-ml-text"
   },
   "cordova": {
     "id": "cordova-plugin-ml-text",
