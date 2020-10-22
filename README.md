@@ -25,7 +25,7 @@ console.log(mltext);
 
 This requires cordova 7.1.0+ , cordova android 6.4.0+ and cordova ios 4.3.0+
 
-`cordova plugin add https://bitbucket.org/bhivedevs/cordova-plugin-ml-text.git`
+`cordova plugin add cordova-plugin-ml-text`
 
 > Note : This might take a while!
 
