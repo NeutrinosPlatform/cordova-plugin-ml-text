@@ -33,7 +33,7 @@ This requires cordova 7.1.0+ , cordova android 6.4.0+ and cordova ios 4.3.0+
 *MLKIT_TEXT_RECOGNITION_VERSION*
 Version of `com.google.android.gms:play-services-mlkit-text-recognition`. This defaults to `16.1.0` but by using this variable you can specify a different version if you like:
 
-`cordova plugin add https://bitbucket.org/bhivedevs/cordova-plugin-ml-text.git --variable MLKIT_TEXT_RECOGNITION_VERSION=16.1.0`
+`cordova plugin add cordova-plugin-ml-text --variable MLKIT_TEXT_RECOGNITION_VERSION=16.1.0`
 
 Also add the following plugin :- 
 
