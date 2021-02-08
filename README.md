@@ -121,9 +121,9 @@ function onFail(message) {
 **Using [cordova-plugin-document-scanner](https://github.com/NeutrinosPlatform/cordova-plugin-document-scanner)** 
 >*Note :- base64 and NATIVEURIs won't work with cordova-plugin-document-scanner plugin*
 ```js 
-scan.scanDoc(1, onSuccess, onFail);
+scan.scanDoc(successCallback, errorCallback, {sourceType : 1, fileName : "myfilename", quality : 1.0, returnBase64 : false}); 
 
-function onSuccess(imageURI) {
+function successCallback(imageURI) {
       mltext.getText(onSuccess, onFail,{imgSrc : imageData}); 
       // for imgType Use 0,2 // 1,3,4 won't work
       function onSuccess(recognizedText) {
@@ -137,20 +137,20 @@ function onSuccess(imageURI) {
             alert('Failed because: ' + message);
       }
 }
-function onFail(message) {
+function errorCallback(message) {
       alert('Failed because: ' + message);
 }
 ```
 
 # More about us
-Find out more or contact us directly here :- http://www.neutrinos.co/
+Find out more or contact us directly here :- https://www.neutrinos.co/
 
 Facebook :- https://www.facebook.com/Neutrinos.co/ <br/>
 LinkedIn :- https://www.linkedin.com/company/25057297/ <br/>
 Twitter :- https://twitter.com/Neutrinosco <br/>
 Instagram :- https://www.instagram.com/neutrinos.co/
 
-[![N|Solid](https://image4.owler.com/logo/neutrinos_owler_20171023_142541_original.jpg "Neutrinos")](http://www.neutrinos.co/) 
+[![N|Solid](https://image4.owler.com/logo/neutrinos_owler_20171023_142541_original.jpg "Neutrinos")](https://www.neutrinos.co/) 
 
 # Example Objects
 The five properties text, languages, confidence, points and frame are obtained as arrays and are associated with each other using the index of the array.

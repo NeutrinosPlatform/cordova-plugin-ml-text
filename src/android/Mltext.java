@@ -153,9 +153,14 @@ public class Mltext extends CordovaPlugin {
 
                                             if(result.getText().trim().equals(""))
                                             {
-                                                callbackContext.error("No text found in image");
-                                                PluginResult r = new PluginResult(PluginResult.Status.ERROR);
+                                                resultobj.put("foundText", false);
+                                                callbackContext.success(resultobj);
+                                                PluginResult r = new PluginResult(PluginResult.Status.OK);
                                                 callbackContext.sendPluginResult(r);
+
+                                                // callbackContext.error("No text found in image");
+                                                // PluginResult r = new PluginResult(PluginResult.Status.ERROR);
+                                                // callbackContext.sendPluginResult(r);
                                             }
                                             else
                                             {
@@ -344,6 +349,7 @@ public class Mltext extends CordovaPlugin {
                                                 wordobj.put("wordpoints", wordpoints);
                                                 wordobj.put("wordframe", wordframe);
 
+                                                resultobj.put("foundText", true);
                                                 resultobj.put("blocks", blockobj);
                                                 resultobj.put("lines", lineobj);
                                                 resultobj.put("words", wordobj);

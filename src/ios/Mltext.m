@@ -81,10 +81,21 @@
                 [textRecognizer processImage:image
                                   completion:^(MLKText *_Nullable result,
                                                NSError *_Nullable error) {
+                                      NSMutableDictionary* resultobjmut = [[NSMutableDictionary alloc] init];             
                                       if (error != nil || result == nil) {
                                           if (result==nil) {
-                                              CDVPluginResult* resulta = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"No text found in image"];
-                                              [self.commandDelegate sendPluginResult:resulta callbackId: self.commandglo.callbackId];
+                                            NSNumber *foundText = @NO;
+                                            resultobjmut = [[[NSDictionary alloc] initWithObjectsAndKeys:
+                                                            foundText,@"foundText", nil] mutableCopy];
+                                            NSDictionary *resultobj = [NSDictionary dictionaryWithDictionary:resultobjmut];
+                                            
+                                            CDVPluginResult* resultcor = [CDVPluginResult
+                                                                        resultWithStatus:CDVCommandStatus_OK
+                                                                        messageAsDictionary:resultobj];
+                                            [self.commandDelegate sendPluginResult:resultcor callbackId:_commandglo.callbackId];
+
+                                            //   CDVPluginResult* resulta = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"No text found in image"];
+                                            //   [self.commandDelegate sendPluginResult:resulta callbackId: self.commandglo.callbackId];
                                           }
                                           else
                                           {
@@ -93,7 +104,6 @@
                                           }
                                       }
                                       
-                                      NSMutableDictionary* resultobjmut = [[NSMutableDictionary alloc] init];
                                       NSMutableDictionary* blockobj = [[NSMutableDictionary alloc] init];
                                       NSMutableDictionary* lineobj = [[NSMutableDictionary alloc] init];
                                       NSMutableDictionary* wordobj = [[NSMutableDictionary alloc] init];
@@ -286,8 +296,9 @@
                                                   wordframe,@"wordframe", nil] mutableCopy];
                                       NSDictionary *wobj = [NSDictionary dictionaryWithDictionary:wordobj];
                                       
-                                      
+                                      NSNumber *foundText = @YES;
                                       resultobjmut = [[[NSDictionary alloc] initWithObjectsAndKeys:
+                                                       foundText,@"foundText",
                                                        bobj,@"blocks",
                                                        lobj,@"lines",
                                                        wobj,@"words", nil] mutableCopy];
