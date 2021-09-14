@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         id="cordova-plugin-ml-text"
-        version="3.0.0">
+        version="3.1.0">
 
   <name>Mltext</name>
 
