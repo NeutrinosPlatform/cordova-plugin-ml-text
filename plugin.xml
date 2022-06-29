@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         id="cordova-plugin-ml-text"
-        version="3.1.0">
+        version="3.2.0">
 
   <name>Mltext</name>
 
@@ -41,32 +41,31 @@
 
 
   <platform name="ios">
-  <config-file target="config.xml" parent="/*">
-    <feature name="Mltext">
-      <param name="ios-package" value="Mltext" />
-    </feature>
-  </config-file>
-  
-  
-  <preference name="CAMERA_USAGE_DESCRIPTION" default="This app needs camera access"/>
-  <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
-      <string>$CAMERA_USAGE_DESCRIPTION</string>
-  </config-file>
-  
-  <preference name="PHOTOLIBRARY_USAGE_DESCRIPTION" default="This app needs read/write-access photo library access"/>
-  <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
-      <string>$PHOTOLIBRARY_USAGE_DESCRIPTION</string>
-  </config-file>
+    <config-file target="config.xml" parent="/*">
+      <feature name="Mltext">
+        <param name="ios-package" value="Mltext" />
+      </feature>
+    </config-file>
 
-<header-file src="src/ios/Mltext.h" target-dir="MltextPlugin"/>
-<source-file src="src/ios/Mltext.m" target-dir="MltextPlugin"/>
+
+    <preference name="CAMERA_USAGE_DESCRIPTION" default="This app needs camera access"/>
+    <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+        <string>$CAMERA_USAGE_DESCRIPTION</string>
+    </config-file>
+
+    <preference name="PHOTOLIBRARY_USAGE_DESCRIPTION" default="This app needs read/write-access photo library access"/>
+    <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
+        <string>$PHOTOLIBRARY_USAGE_DESCRIPTION</string>
+    </config-file>
+
+    <source-file src="src/ios/Mltext.swift" target-dir="MltextPlugin" />
 
     <podspec>
       <config>
         <source url="https://cdn.cocoapods.org/"/>
       </config>
       <pods use-frameworks="true">
-        <pod name="MLKitTextRecognition" />
+        <pod name="GoogleMLKit/TextRecognition" spec="~> 2.2.0" />
       </pods>
     </podspec>
 
