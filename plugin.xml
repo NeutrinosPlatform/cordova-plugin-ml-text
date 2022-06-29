@@ -24,7 +24,7 @@
       </feature>
     </config-file> 
 
-    <preference name="MLKIT_TEXT_RECOGNITION_VERSION" default="16.1.0"/>
+    <preference name="MLKIT_TEXT_RECOGNITION_VERSION" default="18.0.0"/>
 
     <config-file target="AndroidManifest.xml" parent="/*">
             <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
