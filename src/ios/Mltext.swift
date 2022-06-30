@@ -11,7 +11,7 @@ import MLKit
 import UIKit
 import Photos
 
-@objc (MLText) class Mltext : CDVPlugin {
+@objc (Mltext) class Mltext : CDVPlugin {
 	var image: UIImage?
 	
 	static let NORMFILEURI = Int(0)
@@ -25,7 +25,7 @@ import Photos
 		
 		self.commandDelegate.run {
 			let stype: Int = command.argument(at: 0, withDefault: Mltext.NORMFILEURI) as? Int ?? Mltext.NORMFILEURI
-			guard var name = command.argument(at: 1, withDefault: nil) as? String else {
+			guard var imgSrc: String = command.argument(at: 1, withDefault: nil) as? String else {
 				let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "argument/parameter type mismatch error")
 				self.commandDelegate.send(pluginResult, callbackId:command.callbackId)
 				return
@@ -43,34 +43,31 @@ import Photos
 			
 			let CDV_Converted_Uri_Prefix = "\(scheme)://\(hostname)/_app_file_"
 			
-			if name.hasPrefix(CDV_Converted_Uri_Prefix) {
-				name = name.replacingOccurrences(of: CDV_Converted_Uri_Prefix, with: "")
+			if imgSrc.hasPrefix(CDV_Converted_Uri_Prefix) {
+				imgSrc = imgSrc.replacingOccurrences(of: CDV_Converted_Uri_Prefix, with: "")
 			}
 			
 			self.image = nil
 			
 			switch stype {
 				case Mltext.NORMFILEURI:
-					self.image = UIImage(contentsOfFile: name)
+					self.image = UIImage(contentsOfFile: imgSrc)
 					break
 				
 				case Mltext.NORMNATIVEURI:
-					let urlString = "\(name)"
-					let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")
+					let url = URL(string: imgSrc.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")
 					if let imageData = self.retrieveAssetDataPhotosFramework(url) {
 						self.image = UIImage(data: imageData)
 					}
-					
 					break
 				
 				case Mltext.FASTFILEURI:
-					self.image = UIImage(contentsOfFile: name)
+					self.image = UIImage(contentsOfFile: imgSrc)
 					self.image = self.resizeImage(image: self.image)
 					break
 				
 				case Mltext.FASTNATIVEURI:
-					let urlString = "\(name)"
-					let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")
+					let url = URL(string: imgSrc.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")
 					if let imageData = self.retrieveAssetDataPhotosFramework(url) {
 						self.image = UIImage(data: imageData)
 						self.image = self.resizeImage(image: self.image)
@@ -78,7 +75,7 @@ import Photos
 					break
 				
 				case Mltext.BASE64:
-					if let imageData = Data(base64Encoded: name, options: .ignoreUnknownCharacters) {
+					if let imageData = Data(base64Encoded: imgSrc, options: .ignoreUnknownCharacters) {
 						self.image = UIImage(data: imageData)
 					}
 					break
@@ -216,32 +213,32 @@ import Photos
 			}
 		}
 		
-		let blockobj: [String : Any] = [
+		let blocks: [String : Any] = [
 			"blocktext" : blocktext,
 			"blockpoints" : blockpoints,
 			"blockframe" : blockframe
 		]
 		
-		let lineobj: [String : Any] = [
+		let lines: [String : Any] = [
 			"linetext" : linetext,
 			"linepoints" : linepoints,
 			"lineframe" : lineframe
 		]
 
-		let wordobj: [String : Any] = [
+		let words: [String : Any] = [
 			"wordtext" : wordtext,
 			"wordpoints" : wordpoints,
 			"wordframe" : wordframe
 		]
 
-		let cdvResult: [String : Any] = [
+		let result: [String : Any] = [
 			"foundText" : true,
-			"blocks" : blockobj,
-			"lines" : lineobj,
-			"words" : wordobj
+			"blocks" : blocks,
+			"lines" : lines,
+			"words" : words
 		]
 		
-		let resultcor = CDVPluginResult(status: .ok, messageAs: cdvResult)
+		let resultcor = CDVPluginResult(status: .ok, messageAs: result)
 		self.commandDelegate.send(resultcor, callbackId: command.callbackId)
 	}
 	
@@ -272,21 +269,25 @@ import Photos
 				imgRatio = maxWidth / actualWidth
 				actualHeight = imgRatio * actualHeight
 				actualWidth = maxWidth
-			} else {
+			}
+			else {
 				actualHeight = maxHeight
 				actualWidth = maxWidth
 			}
 		}
 		
 		let rect = CGRect(x: 0.0, y: 0.0, width: actualWidth, height: actualHeight)
-
+		
 		UIGraphicsBeginImageContext(rect.size)
 		image.draw(in: rect)
-		let img: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
-		let imageData = UIImageJPEGRepresentation(img, compressionQuality) ?? Data()
+		guard let img: UIImage = UIGraphicsGetImageFromCurrentImageContext(),
+			  let imageData = UIImageJPEGRepresentation(img, compressionQuality) else {
+			UIGraphicsEndImageContext()
+			return nil
+		}
 		UIGraphicsEndImageContext()
-
-		return UIImage(data: imageData) ?? UIImage()
+		
+		return UIImage(data: imageData)
 	}
 	
 	func retrieveAssetDataPhotosFramework(_ urlMedia: URL?) -> Data? {
