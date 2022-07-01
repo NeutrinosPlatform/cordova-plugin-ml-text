@@ -12,6 +12,7 @@ import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -42,7 +43,7 @@ public class Mltext extends CordovaPlugin {
 
 		cordova.getThreadPool().execute(() -> {
 			try {
-				int argstype = NORMFILEURI;
+				int argstype;
 				String imagestr = "";
 				try {
 					Log.d("argsbeech", args.toString());
@@ -55,20 +56,21 @@ public class Mltext extends CordovaPlugin {
 					callbackContext.sendPluginResult(r);
 					return;
 				}
-				Bitmap bitmap = null;
 
-				if (!imagestr.trim().isEmpty()) {
+				if (imagestr.trim().isEmpty()) {
 					callbackContext.error("Image Uri or Base64 string is empty");
 					PluginResult r = new PluginResult(PluginResult.Status.ERROR);
 					callbackContext.sendPluginResult(r);
 					return;
 				}
 
+				Bitmap bitmap = null;
+
 				if (argstype == NORMFILEURI || argstype == NORMNATIVEURI || argstype == FASTFILEURI || argstype == FASTNATIVEURI) {
 					try {
 
 						// code block that allows this plugin to directly work with document scanner plugin and camera plugin
-						if (imagestr.startsWith("file://")) {
+						if (imagestr.substring(0,6).equals("file://")) {
 							imagestr = imagestr.replaceFirst("file://", "");
 						}
 						//
@@ -103,7 +105,7 @@ public class Mltext extends CordovaPlugin {
 					return;
 				}
 
-				TextRecognizer textRecognizer = TextRecognition.getClient();
+				TextRecognizer textRecognizer = TextRecognition.getClient(new TextRecognizerOptions.Builder().build());
 
 				InputImage image = InputImage.fromBitmap(bitmap, 0);
 				textRecognizer.process(image)

@@ -223,6 +223,9 @@ The basic structure of the object is as follows :-
 ```json
 {
   "foundText" : true,
+  "imgWidht": 600,
+  "imgHeight": 600,
+  "text": "# 3\n2\nQ\nW\nE\nA\nS\nD\nz\nx",
   "blocks": {
     "blockpoints": [
       {
