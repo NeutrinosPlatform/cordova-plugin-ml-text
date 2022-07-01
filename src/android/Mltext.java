@@ -68,13 +68,6 @@ public class Mltext extends CordovaPlugin {
 
 				if (argstype == NORMFILEURI || argstype == NORMNATIVEURI || argstype == FASTFILEURI || argstype == FASTNATIVEURI) {
 					try {
-
-						// code block that allows this plugin to directly work with document scanner plugin and camera plugin
-						if (imagestr.substring(0,6).equals("file://")) {
-							imagestr = imagestr.replaceFirst("file://", "");
-						}
-						//
-
 						Uri uri = Uri.parse(imagestr);
 
 						if ((argstype == NORMFILEURI || argstype == NORMNATIVEURI) && uri != null) { // normal ocr
@@ -350,12 +343,16 @@ public class Mltext extends CordovaPlugin {
 		Bitmap bitmap = BitmapFactory.decodeStream(ctx.getContentResolver()
 				.openInputStream(uri), null, bmOptions);
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-		ByteArrayInputStream ins = new ByteArrayInputStream(baos.toByteArray());
-		bitmap = BitmapFactory.decodeStream(ins);
-		ins.close();
-		baos.close();
+		ByteArrayInputStream ins = null;
+		try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+			ins = new ByteArrayInputStream(baos.toByteArray());
+			bitmap = BitmapFactory.decodeStream(ins);
+		} finally {
+			if (ins != null) {
+				ins.close();
+			}
+		}
 
 		return bitmap;
 	}

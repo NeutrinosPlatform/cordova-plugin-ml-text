@@ -76,6 +76,7 @@ The return value is sent to the **`successCallback`** callback function, in stri
 
 ![N|Solid](https://developers.google.com/vision/images/text-structure.png "Difference between blocks, lines and words")
 
+The value imgWidth and imgHeight return the size of the processed image. Depending on the imgType the image could be resized.
 - **errorCallback**
 The **`errorCallback`** function returns `Scan Failed: Found no text to scan` if no text was detected on the image. It also return other messages based on the error conditions.
 
