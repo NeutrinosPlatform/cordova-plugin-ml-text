@@ -12,7 +12,6 @@ import UIKit
 import Photos
 
 @objc (Mltext) class Mltext : CDVPlugin {
-	var image: UIImage?
 	
 	static let NORMFILEURI = Int(0)
 	static let NORMNATIVEURI = Int(1)
@@ -47,36 +46,36 @@ import Photos
 				imgSrc = imgSrc.replacingOccurrences(of: CDV_Converted_Uri_Prefix, with: "")
 			}
 			
-			self.image = nil
+			var image: UIImage?
 			
 			switch stype {
 				case Mltext.NORMFILEURI:
-					self.image = UIImage(contentsOfFile: imgSrc)
+					image = UIImage(contentsOfFile: imgSrc)
 					break
 				
 				case Mltext.NORMNATIVEURI:
 					let url = URL(string: imgSrc.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")
 					if let imageData = self.retrieveAssetDataPhotosFramework(url) {
-						self.image = UIImage(data: imageData)
+						image = UIImage(data: imageData)
 					}
 					break
 				
 				case Mltext.FASTFILEURI:
-					self.image = UIImage(contentsOfFile: imgSrc)
-					self.image = self.resizeImage(image: self.image)
+					image = UIImage(contentsOfFile: imgSrc)
+					image = self.resizeImage(image: self.image)
 					break
 				
 				case Mltext.FASTNATIVEURI:
 					let url = URL(string: imgSrc.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")
 					if let imageData = self.retrieveAssetDataPhotosFramework(url) {
-						self.image = UIImage(data: imageData)
-						self.image = self.resizeImage(image: self.image)
+						image = UIImage(data: imageData)
+						image = self.resizeImage(image: self.image)
 					}
 					break
 				
 				case Mltext.BASE64:
 					if let imageData = Data(base64Encoded: imgSrc, options: .ignoreUnknownCharacters) {
-						self.image = UIImage(data: imageData)
+						image = UIImage(data: imageData)
 					}
 					break
 				
@@ -86,7 +85,7 @@ import Photos
 					return
 			}
 			
-			guard let image = self.image else {
+			guard let image = image else {
 				let result = CDVPluginResult(status: .error, messageAs: "Error in uri or base64 data!")
 				self.commandDelegate.send(result, callbackId: command.callbackId)
 				return
@@ -96,6 +95,8 @@ import Photos
 			visionImage.orientation = image.imageOrientation
 			
 			let textRecognizer = TextRecognizer.textRecognizer()
+			
+			let imgSize = image.size
 			
 			textRecognizer.process(visionImage) { result, error in
 				guard error == nil, let result = result else {
@@ -111,12 +112,13 @@ import Photos
 					return
 				}
 				// Recognized text
-				self.handleTextRecognizerResult(command, result: result)
+				self.handleTextRecognizerResult(command, result: result, imgSize: imgSize)
 			}
 		}
 	}
 	
-	private func handleTextRecognizerResult(_ command: CDVInvokedUrlCommand, result: Text) -> Void {
+	private func handleTextRecognizerResult(_ command: CDVInvokedUrlCommand, result: Text, imgSize: CGSize) -> Void {
+		
 		var blocktext: [String] = []
 		var blockpoints: [[String:String]] = []
 		var blockframe: [[String:String]] = []
@@ -235,7 +237,10 @@ import Photos
 			"foundText" : true,
 			"blocks" : blocks,
 			"lines" : lines,
-			"words" : words
+			"words" : words,
+			"imgWidth": imgSize.width,
+			"imgHeight": imgSize.height,
+			"text": result.text
 		]
 		
 		let resultcor = CDVPluginResult(status: .ok, messageAs: result)
